@@ -61,7 +61,7 @@ expect(await newPage.innerText('body')).toContain('Error: Invalid email address'
 
 })
 
-test.only('4', async ({browser})=>{
+test('4', async ({browser})=>{
     const context = await browser.newContext()
     const page = await context.newPage()
     await page.goto('https://webdriveruniversity.com/')
@@ -78,16 +78,45 @@ test.only('4', async ({browser})=>{
     await expect(newPage.url()).toBe('https://webdriveruniversity.com/Contact-Us/contact-form-thank-you.html')
     expect(await newPage.innerText('body')).toContain('Thank You for your Message!')
 })
-test('6', async ({page})=>{
-    await page.goto('https://webdriveruniversity.com/');
-    await page.getByText('DROPDOWN, CHECKBOXE(S) & RADIO BUTTON(S)').evaluate((element) => {
-        element.removeAttribute('target');
-        element.click()
-    })
-    await page.getByText('Checkboxe(s)').filter('text=Option 1').click()
-    await page.getByText('Checkboxe(s)').filter('text=Option 2').click()
-    await page.getByText('Checkboxe(s)').filter('text=Option 4').click()
-    await expect(page.locator('[type="checkbox"]')).toBeChecked()
+
+test.only('5', async ({browser}) => {
+    const context = await browser.newContext()
+    const page = await context.newPage()
+    await page.goto('https://webdriveruniversity.com/')
+    const pageLink = page.locator('#dropdown-checkboxes-radiobuttons')
+    const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        pageLink.click()
+    ])
+    
+    const dropdownValues = [['JAVA', 'C#', 'Python', 'SQL']
+    ['Eclipse', 'Maven', 'TestNG', 'JUnit'],
+    ['HTML', 'CSS', 'JavaScript', 'JQuery']]
+    for (let i = 0; i < dropdownValues.number; i++) {
+        const dropdown = await newPage.locator('select.dropdown-menu-lists');
+        for (let j = 0; j < dropdownValues[i].number; j++) {
+          await dropdown.selectOption(dropdownValues[i][j]);
+           
+        }
+    }
+})
+
+test('6', async ({browser})=>{
+
+    const context = await browser.newContext()
+    const page = await context.newPage()
+    await page.goto('https://webdriveruniversity.com/')
+    const pageLink = page.locator('#dropdown-checkboxes-radiobuttons')
+    const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        pageLink.click()
+
+    ])
+    await newPage.getByText('Option 1').click()
+    await newPage.getByText('Option 2').click()
+    await newPage.getByText('Option 4').click()
+    const locator = newPage.getByLabel('input')
+    await (expect(locator).toBeChecked())
 })
 test('7', async ({page})=>{
     await page.goto('https://webdriveruniversity.com/');
