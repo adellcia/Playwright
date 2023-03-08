@@ -1,4 +1,4 @@
-//const {test} = require('@playright/test');
+const {test} = require('@playright/test');
 import { test } from '@playwright/test';
 
 test('Browser Context Test', async ({browser})=>
